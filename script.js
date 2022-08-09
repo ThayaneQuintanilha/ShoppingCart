@@ -1,3 +1,5 @@
+// const { fetchProducts } = require("./helpers/fetchProducts");
+
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
   img.className = 'item__image';
@@ -12,7 +14,7 @@ const createCustomElement = (element, className, innerText) => {
   return e;
 };
 
-const createProductItemElement = ({ sku, name, image }) => {
+const createProductItemElement = ({ id: sku, title: name, thumbnail: image }) => {
   const section = document.createElement('section');
   section.className = 'item';
 
@@ -22,6 +24,16 @@ const createProductItemElement = ({ sku, name, image }) => {
   section.appendChild(createCustomElement('button', 'item__add', 'Adicionar ao carrinho!'));
 
   return section;
+};
+
+const createChild = async (product) => { // Pedi ajuda de um amigo, thiago Lopes, pois não estava retornando o meus items!
+  const response = await fetchProducts(product);
+  const items = document.querySelector('.items');
+
+  response.results.forEach(({ id, title, thumbnail }) => {
+    const addItems = createProductItemElement({ id, title, thumbnail });
+    items.appendChild(addItems);
+  });
 };
 
 const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
@@ -38,4 +50,6 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => {};
+window.onload = () => {
+  createChild('celular');
+};
