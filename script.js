@@ -36,6 +36,10 @@ const createChild = async (product) => { // Pedi ajuda de um amigo, thiago Lopes
   });
 };
 
+const cartItemClickListener = (event) => {
+  event.target.remove();
+};
+
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -50,7 +54,7 @@ const addToCart = () => {
   const buttonAdd = document.querySelectorAll('.item__add');
 
   buttonAdd.forEach((product) => {
-    product.addEventListener('click', async (event) => {
+    product.addEventListener('click', async () => {
       const parentSection = getSkuFromProductItem(product.parentNode);
       const addToFetch = await fetchItem(parentSection);
       // console.log(addToFetch);
@@ -60,10 +64,6 @@ const addToCart = () => {
     });
   });
 };
-
-// const cartItemClickListener = (event) => {
-//   // coloque seu código aqui
-// };
 
 window.onload = async () => {
   await createChild('celular');
