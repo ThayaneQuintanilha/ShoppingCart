@@ -1,4 +1,4 @@
-// const { fetchProducts } = require("./helpers/fetchProducts");
+const olList = document.querySelector('.cart__items');
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -36,12 +36,6 @@ const createChild = async (product) => { // Pedi ajuda de um amigo, thiago Lopes
   });
 };
 
-const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
-
-const cartItemClickListener = (event) => {
-  // coloque seu código aqui
-};
-
 const createCartItemElement = ({ sku, name, salePrice }) => {
   const li = document.createElement('li');
   li.className = 'cart__item';
@@ -50,6 +44,28 @@ const createCartItemElement = ({ sku, name, salePrice }) => {
   return li;
 };
 
-window.onload = () => {
-  createChild('celular');
+const getSkuFromProductItem = (item) => item.querySelector('span.item__sku').innerText;
+
+const addToCart = () => {
+  const buttonAdd = document.querySelectorAll('.item__add');
+
+  buttonAdd.forEach((product) => {
+    product.addEventListener('click', async (event) => {
+      const parentSection = getSkuFromProductItem(product.parentNode);
+      const addToFetch = await fetchItem(parentSection);
+      // console.log(addToFetch);
+      const { id: sku, title: name, price: salePrice } = addToFetch;
+      const addProducts = createCartItemElement({ sku, name, salePrice });
+      olList.appendChild(addProducts);
+    });
+  });
+};
+
+// const cartItemClickListener = (event) => {
+//   // coloque seu código aqui
+// };
+
+window.onload = async () => {
+  await createChild('celular');
+  await addToCart();
 };
