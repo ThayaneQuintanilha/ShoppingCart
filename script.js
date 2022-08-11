@@ -1,4 +1,5 @@
 const olList = document.querySelector('.cart__items');
+const emptyCart = document.querySelector('.empty-cart');
 
 const createProductImageElement = (imageSource) => {
   const img = document.createElement('img');
@@ -38,6 +39,7 @@ const createChild = async (product) => { // Pedi ajuda de um amigo, thiago Lopes
 
 const cartItemClickListener = (event) => {
   event.target.remove();
+  saveCartItems('cartItems', olList.innerHTML);
 };
 
 const createCartItemElement = ({ sku, name, salePrice }) => {
@@ -61,11 +63,31 @@ const addToCart = () => {
       const { id: sku, title: name, price: salePrice } = addToFetch;
       const addProducts = createCartItemElement({ sku, name, salePrice });
       olList.appendChild(addProducts);
+      saveCartItems('cartItems', olList.innerHTML);
     });
   });
 };
 
+const localRemove = () => {
+  const li = document.querySelectorAll('.cart__item');
+  li.forEach((list) => {
+    list.addEventListener('click', cartItemClickListener);
+  });
+  saveCartItems('cartItems', olList.innerHTML);
+};
+
+const render = async (key) => {
+  olList.innerHTML = await getSavedCartItems(key);
+};
+
+emptyCart.addEventListener('click', () => {
+  olList.innerHTML = '';
+  saveCartItems('cartItems', olList.innerHTML);
+});
+
 window.onload = async () => {
   await createChild('celular');
   await addToCart();
+  await render('cartItems'); // LocalStorage feito com ajuda de um amigo, Higor Maranhão da tribo A! 
+  await localRemove();
 };
